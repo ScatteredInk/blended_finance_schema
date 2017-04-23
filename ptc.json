@@ -196,6 +196,23 @@
         }
       }
     },
+    "InvestmentPeriod": {
+      "type": "object",
+      "description": "Term/lease/target holding period of an investment, described in months. Adapted from (EngagedX Investment Standards)[http://www.engagedx.com/portfolio_engagedx-investment-standards-exist.html]",
+      "title": "Investment Period",
+      "properties": {
+        "duration": {
+          "type": "number",
+          "description": "The investment period in number of months",
+          "title": "Duration"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of investment period. Term refers to a loan, lease length to a property investment, target holding period to an equity investment.",
+          "title": "Type"
+        }
+      }
+    },
     "Grant": {
       "type": "object",
       "description": "A grant in a blended finance deal.",
@@ -237,6 +254,9 @@
         },
         "type": {
           "$ref": "#/definitions/InvestmentType"
+        },
+        "period": {
+          "$ref": "#/definitions/InvestmentPeriod"
         },
         "status": {
           "type": "string",
@@ -283,16 +303,14 @@
         "type": {
           "$ref": "#/definitions/InvestmentType"
         },
+        "period": {
+          "$ref": "#/definitions/InvestmentPeriod"
+        },
         "amountAwarded": {
           "type": "number",
           "description": "Total loan amount awarded in numbers (do not include commas or currency symbols such as £). If you have provided detailed transaction information on a separate table, this should equal the sum of all the award transactions for this grant.",
           "weight": 5.04,
           "title": "Amount Awarded"
-        },
-        "term": {
-          "type": "number",
-          "description": "The term of the loan in months",
-          "title": "Term Months"
         }
       }
     },
