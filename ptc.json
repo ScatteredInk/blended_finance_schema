@@ -177,6 +177,25 @@
         }
       }
     },
+    "InvestmentType": {
+      "type": "object",
+      "description": "The type of investment described.",
+      "title": "Investment Type",
+      "properties": {
+        "code": {
+          "type": "number",
+          "title": "Code",
+          "description": "A code representing the type of investment. Codes correspond to named investment types in the (EngagedX Investment Standards)[http://www.engagedx.com/portfolio_engagedx-investment-standards-exist.html], with the addition of 'Grant'",
+          "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the investment type. Taken from (EngagedX Investment Standards)[http://www.engagedx.com/portfolio_engagedx-investment-standards-exist.html], with the addition of 'Grant'",
+          "enum": ["Equity", "Q-Equ: Revenue Participation", "Q-Equ: PbR/ SIB", "Q-Equ: Other", "Debt: Bond", "Debt: Term Loan", "Debt: Convertible Note", "Debt: Revolving Credit/ Overdraft", "Debt: Other", "Grant"]
+        }
+      }
+    },
     "Grant": {
       "type": "object",
       "description": "A grant in a blended finance deal.",
@@ -187,6 +206,9 @@
             "description": "The unique identifier for this grant. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
             "weight": 0.001,
             "title": "Identifier"
+          },
+          "type": {
+            "$ref": "#/definitions/InvestmentType"
           },
           "amountAwarded": {
             "type": "number",
@@ -208,11 +230,14 @@
       "title": "shareIssue",
       "properties": {
         "id": {
-            "type": "string",
-            "description": "The unique identifier for this share issue. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
-            "weight": 0.001,
-            "title": "Identifier"
-          },
+          "type": "string",
+          "description": "The unique identifier for this share issue. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
+          "weight": 0.001,
+          "title": "Identifier"
+        },
+        "type": {
+          "$ref": "#/definitions/InvestmentType"
+        },
         "status": {
           "type": "string",
           "description": "The current status of the share issue.",
@@ -234,6 +259,13 @@
           "type": "number",
           "description": "Total amount raised in a completed share offer",
           "title": "Amount Raised"
+        },
+        "dateModified": {
+          "format": "date-time",
+          "type": "string",
+          "description": "The date and time when information about this share issue was last updated.",
+          "weight": 25,
+          "title": "Last modified"
         }
       }
     },
@@ -247,6 +279,9 @@
           "description": "The unique identifier for this loan. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
           "weight": 0.001,
           "title": "Identifier"
+        },
+        "type": {
+          "$ref": "#/definitions/InvestmentType"
         },
         "amountAwarded": {
           "type": "number",
