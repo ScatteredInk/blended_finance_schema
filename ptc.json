@@ -150,18 +150,6 @@
           "weight": 2,
           "title": "Country Code"
         },
-        "latitude": {
-          "type": ["string","null"],
-          "description": "The latitude of a point location",
-          "weight": 4.001,
-          "title": "Latitude"
-        },
-        "longitude": {
-          "type": ["string","null"],
-          "description": "The longitude of a point location",
-          "weight": 4.002,
-          "title": "Longitude"
-        },
         "description": {
           "type": ["string","null"],
           "description": "A description of this location. This could include details of the element of the activity that takes place here.",
@@ -189,6 +177,31 @@
         }
       }
     },
+    "Grant": {
+      "type": "object",
+      "description": "A grant in a blended finance deal.",
+      "title": "Grant",
+      "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for this grant. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
+            "weight": 0.001,
+            "title": "Identifier"
+          },
+          "amountAwarded": {
+            "type": "number",
+            "description": "Total amount awarded in numbers (do not include commas or currency symbols such as £). If you have provided detailed transaction information on a separate table, this should equal the sum of all the award transactions for this grant.",
+            "weight": 5.04,
+            "title": "Amount Awarded"
+          },
+          "amountDisbursed": {
+           "type": "number",
+           "description": "Total amount disbursed (paid) to this grantee when this record was last updated (in numbers: do not include commas or currency symbols such as £)). If you have provided detailed transaction information on a separate table, this should equal the sum of all the disbursement transactions for this grant.",
+           "weight": 5.04,
+           "title": "Amount Disbursed"
+          }
+        }
+    },
     "ShareIssue": {
       "type": "object",
       "description": "A share issue within a blended finance deal",
@@ -200,16 +213,27 @@
             "weight": 0.001,
             "title": "Identifier"
           },
-        "amountAwarded": {
+        "status": {
+          "type": "string",
+          "description": "The current status of the share issue.",
+          "title": "Status",
+          "enum": ["pipeline", "open", "finished"]
+        },
+        "matchFundingAmountAwarded": {
           "type": "number",
-          "description": "Total amount awarded in numbers (do not include commas or currency symbols such as £). If you have provided detailed transaction information on a separate table, this should equal the sum of all the award transactions for this grant.",
+          "description": "Total match-funding amount awarded in numbers (do not include commas or currency symbols such as £). If you have provided detailed transaction information on a separate table, this should equal the sum of all the award transactions for this grant.",
           "weight": 5.04,
-          "title": "Amount Awarded"
+          "title": "Match Funding Amount Awarded"
         },
         "raiseTarget": {
           "type": "number",
           "description": "Total share-raising target, including any matched-funding contribution.",
           "title": "Raise Target"
+        },
+        "amountRaised": {
+          "type": "number",
+          "description": "Total amount raised in a completed share offer",
+          "title": "Amount Raised"
         }
       }
     },
@@ -226,36 +250,62 @@
         },
         "amountAwarded": {
           "type": "number",
-          "description": "Total amount awarded in numbers (do not include commas or currency symbols such as £). If you have provided detailed transaction information on a separate table, this should equal the sum of all the award transactions for this grant.",
+          "description": "Total loan amount awarded in numbers (do not include commas or currency symbols such as £). If you have provided detailed transaction information on a separate table, this should equal the sum of all the award transactions for this grant.",
           "weight": 5.04,
           "title": "Amount Awarded"
         },
-        "Term": {
+        "term": {
           "type": "number",
           "description": "The term of the loan in months",
           "title": "Term Months"
         }
       }
+    },
+    "Project": {
+      "type": "object",
+      "description": "The project associated with this blended finance deal.",
+      "title": "Project",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for this project. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
+          "weight": 0.001,
+          "title": "Identifier"
+        },
+        "title": {
+          "type": "string",
+          "description": "A title for this project. This should be under 140 characters long.",
+          "title": "Title",
+          "weight": 1.05
+        },
+        "description": {
+          "type": "string",
+          "description": "A short description of this project.",
+          "weight": 9,
+          "title": "Description"
+        }
+      }
     }
   },
+  "required": ["id"],
   "properties": {
     "id": {
       "type": "string",
       "description": "The unique identifier for this deal. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
       "weight": 0.001,
-      "title": "Identifier"
+      "title": "Deal:Identifier"
     },
     "title": {
       "type": "string",
       "description": "A title for this deal activity. This should be under 140 characters long.",
       "weight": 1.05,
-      "title": "Title"
+      "title": "Deal:Title"
     },
     "description": {
       "type": "string",
       "description": "A short description of this deal activity.",
       "weight": 9,
-      "title": "Description"
+      "title": "Deal:Description"
     },
     "recipientOrganization": {
       "items": {
@@ -266,54 +316,53 @@
       "weight": 5,
       "title": "Recipient Org",
       "description":"Details of the recipient of this deal.",
-      "rollUp": ["id","name","charityNumber","companyNumber","streetAddress","addressLocality","addressRegion","postalCode","addressCountry","description","url"]
+      "rollUp": ["id","name","charityNumber","companyNumber","postalCode"]
     },
    "grant": {
-        "type": "object",
         "description": "A grant within a blended finance deal",
         "title": "Grant",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier for this grant. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
-            "weight": 0.001,
-            "title": "Identifier"
-          },
-          "amountAwarded": {
-            "type": "number",
-            "description": "Total amount awarded in numbers (do not include commas or currency symbols such as £). If you have provided detailed transaction information on a separate table, this should equal the sum of all the award transactions for this grant.",
-            "weight": 5.04,
-            "title": "Amount Awarded"
-          }
-        }
-      },
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Grant"
+        },
+        "rollUp": ["id", "amountAwarded"]
+    },
     "loan": {
       "description": "A loan within a blended finance deal",
       "title": "Loan",
-      "rollUp": ["id", "amountAwarded"],
+      "type": "array",
       "items": {
         "$ref": "#/definitions/Loan"
       },
-      "type": "array"
+     "rollUp": ["id", "amountAwarded"]
     },
     "shareIssue": {
+      "description": "A share issue in a blended finance deal",
+      "title": "Share Issue",
+      "type": "array",
       "items": {
         "$ref": "#/definitions/ShareIssue"
       },
+      "rollUp": ["id", "matchFundingAmountAwarded"]
+    },
+    "project": {
+      "description": "A project associated with a blended finance deal",
+      "title": "Project",
       "type": "array",
-      "title": "Share Issue",
-      "description": "A share issue in a blended finance deal",
-      "rollUp": ["id", "amountAwarded"]
-  },
+      "items": {
+        "$ref": "#/definitions/Project"
+      },
+      "rollUp": ["id", "title"]
+    },
     "fundingOrganization": {
+      "description": "Details of the funder",
+      "title": "Funding Org",
       "items": {
         "$ref": "#/definitions/Organization"
       },
       "minItems": 1,
       "type": "array",
-      "description": "Details of the funder",
       "weight": 4,
-      "title": "Funding Org",
       "rollUp": ["id","name","department"]
     }
   }
