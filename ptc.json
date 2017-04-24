@@ -222,6 +222,39 @@
         }
       }
     },
+    "Deal": {
+      "type": "object",
+      "description": "An blended finance deal",
+      "title": "Deal",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for this deal. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
+          "weight": 0.001,
+          "title": "Identifier"
+        },
+        "title": {
+          "type": "string",
+          "description": "A title for this deal activity. This should be under 140 characters long.",
+          "weight": 1.05,
+          "title": "Title"
+        },
+        "description": {
+          "type": "string",
+          "description": "A short description of this deal activity.",
+          "weight": 9,
+          "title": "Description"
+        },
+        "currency": {
+          "$ref": "#/definitions/Currency"
+        },
+        "totalDealValue": {
+          "type": "number",
+          "description": "The total value of all components of this blended finance deal in numbers.",
+          "title": "Total Value"
+        }
+      }
+    },
     "Investment": {
       "type": "object",
       "description": "An investment within a blended finance deal",
@@ -451,23 +484,16 @@
   },
   "required": ["id"],
   "properties": {
-    "id": {
-      "type": "string",
-      "description": "The unique identifier for this deal. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
-      "weight": 0.001,
-      "title": "Deal:Identifier"
-    },
-    "title": {
-      "type": "string",
-      "description": "A title for this deal activity. This should be under 140 characters long.",
-      "weight": 1.05,
-      "title": "Deal:Title"
-    },
-    "description": {
-      "type": "string",
-      "description": "A short description of this deal activity.",
-      "weight": 9,
-      "title": "Deal:Description"
+    "deal": {
+      "items": {
+        "$ref": "#/definitions/Deal"
+      },
+      "minItems": 1,
+      "type": "array",
+      "weight": 5,
+      "title": "Deal",
+      "description":"Details of the recipient of this deal.",
+      "rollUp": ["id","title", "description", "currency", "totalDealValue"]
     },
     "recipientOrganization": {
       "items": {
@@ -479,6 +505,26 @@
       "title": "Recipient Org",
       "description":"Details of the recipient of this deal.",
       "rollUp": ["id","name","charityNumber","companyNumber","postalCode"]
+    },
+    "project": {
+      "description": "A project associated with a blended finance deal",
+      "title": "Project",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Project"
+      },
+      "rollUp": ["id", "title"]
+    },
+    "fundingOrganization": {
+      "description": "Details of the funder of the blended finance deal. If different components of the deal have separate funders, these should be recorded within the individual investment entries.",
+      "title": "Deal:Funding Org",
+      "items": {
+        "$ref": "#/definitions/Organization"
+      },
+      "minItems": 1,
+      "type": "array",
+      "weight": 4,
+      "rollUp": ["id","name","department"]
     },
    "grant": {
         "description": "A grant within a blended finance deal",
@@ -506,26 +552,6 @@
         "$ref": "#/definitions/Investment"
       },
       "rollUp": ["id", "dateCommitted", "currency", "amountCommitted"]
-    },
-    "project": {
-      "description": "A project associated with a blended finance deal",
-      "title": "Project",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Project"
-      },
-      "rollUp": ["id", "title"]
-    },
-    "fundingOrganization": {
-      "description": "Details of the funder of the blended finance deal. If different components of the deal have separate funders, these should be recorded within the individual investment entries.",
-      "title": "Funding Org",
-      "items": {
-        "$ref": "#/definitions/Organization"
-      },
-      "minItems": 1,
-      "type": "array",
-      "weight": 4,
-      "rollUp": ["id","name","department"]
     }
   }
 }
