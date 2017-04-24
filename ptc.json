@@ -252,6 +252,14 @@
           "type": "number",
           "description": "The total value of all components of this blended finance deal in numbers.",
           "title": "Total Value"
+        },
+        "fundingOrganization": {
+          "type": "array",
+          "title": "Funding Organization",
+          "items": {
+            "$ref": "#/definitions/Organization"
+          }
+
         }
       }
     },
