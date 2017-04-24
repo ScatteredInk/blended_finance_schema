@@ -3,6 +3,51 @@
   "title": "PtC Blended Finance Data Standard Schema",
   "type":"object",
   "definitions": {
+    "Currency": {
+        "type": "string",
+        "description": "The currency used in amounts. Use the three-letter currency code from [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) eg: Use GBP for Pounds Sterling.",
+        "weight": 5.02,
+        "enum": ["AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BRL","BSD","BTN","BWP","BYR","BZD","CAD","CDF","CHF","CLP","CNY","COP","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GGP","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HRK","HTG","HUF","IDR","ILS","IMP","INR","IQD","IRR","ISK","JEP","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LTL","LVL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRO","MUR","MVR","MWK","MXN","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLL","SOS","SPL","SRD","STD","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TVD","TWD","TZS","UAH","UGX","USD","UYU","UZS","VEF","VND","VUV","WST","XAF","XCD","XDR","XOF","XPF","YER","ZAR","ZMW","ZWD"],
+        "title": "Currency"
+    },
+    "GrantProgramme": {
+          "type": "object",
+          "title": "Grant Programme",
+          "properties": {
+           "code": {
+             "type": "string",
+             "description": "An identifier for this grant programme.",
+             "weight": 9,
+             "title": "Code"
+           },
+           "title": {
+             "type": ["string","null"],
+             "description": "The title of this grant programme.",
+             "weight": 1.05,
+             "title": "Title"
+           },
+           "description": {
+             "type": ["string","null"],
+             "description": "A description of this grant programme.",
+             "weight": 9,
+             "title": "Description"
+           },
+           "url": {
+             "type": ["string","null"],
+             "format": "uri",
+             "description": "A web link to more details of this grant programme.",
+             "weight": 9,
+             "title": "URL"
+           },
+           "dateModified": {
+             "format": "date-time",
+             "type": "string",
+             "description": "The date and time when information about this grant programme was last updated.",
+             "weight": 25,
+             "title": "Last modified"
+           }
+          }
+        },
     "Organization": {
       "type": "object",
       "required":["id","name"],
@@ -177,6 +222,63 @@
         }
       }
     },
+    "Investment": {
+      "type": "object",
+      "description": "An investment within a blended finance deal",
+      "title": "Investment",
+      "properties": {
+        "id": {
+            "type": "string",
+            "description": "The unique identifier for this grant. Made up of your 360Giving prefix, and an identifier from your records. See the [360Giving Grant identifier guidance](http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier) for details.",
+            "weight": 0.001,
+            "title": "Identifier"
+          },
+        "currency": {
+          "$ref": "#/definitions/Currency"
+        },
+        "programme": {
+          "$ref": "#/definitions/GrantProgramme"
+        },
+        "amountCommitted": {
+          "type": "number",
+          "description": "Total amount committed in numbers (do not include commas or currency symbols such as £). If you have provided detailed transaction information on a separate table, this should equal the sum of all the award transactions for this grant.",
+          "title": "Amount:Committed"
+        },
+        "dateCommitted": {
+          "type": "string",
+          "description":"The date the investment was committed in the format YYYY-MM-DD",
+          "title": "Date:Committed"
+        },
+        "fundingOrganization": {
+          "title": "Funding Organization",
+          "properties": {
+            "$ref": "#/definitions/Organization"
+          }
+        },
+        "investmentTypeCode": {
+          "type": "number",
+          "title": "Type:Code",
+          "description": "A code representing the type of investment. Codes correspond to named investment types in the (EngagedX Investment Standards)[http://www.engagedx.com/portfolio_engagedx-investment-standards-exist.html], with the addition of 'Grant'",
+          "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        },
+        "investmentTypeName": {
+          "type": "string",
+          "title": "Type:Name",
+          "description": "The name of the investment type. Taken from (EngagedX Investment Standards)[http://www.engagedx.com/portfolio_engagedx-investment-standards-exist.html], with the addition of 'Grant'",
+          "enum": ["Equity", "Q-Equ: Revenue Participation", "Q-Equ: PbR/ SIB", "Q-Equ: Other", "Debt: Bond", "Debt: Term Loan", "Debt: Convertible Note", "Debt: Revolving Credit/ Overdraft", "Debt: Other", "Grant"]
+        },
+        "investmentPeriodDuration": {
+          "type": "number",
+          "description": "The investment period in number of months",
+          "title": "Period:Duration"
+        },
+        "investmentPeriodType": {
+          "type": "string",
+          "description": "The type of investment period. Term refers to a loan, lease length to a property investment, target holding period to an equity investment.",
+          "title": "Period:Type"
+        }
+      }
+    },
     "InvestmentType": {
       "type": "object",
       "description": "The type of investment described.",
@@ -226,6 +328,13 @@
           },
           "type": {
             "$ref": "#/definitions/InvestmentType"
+          },
+          "investment": {
+            "type": "array",
+            "title": "Investment",
+            "items": {
+              "$ref": "#/definitions/Investment"
+            }
           },
           "amountAwarded": {
             "type": "number",
@@ -376,27 +485,27 @@
         "title": "Grant",
         "type": "array",
         "items": {
-          "$ref": "#/definitions/Grant"
+          "$ref": "#/definitions/Investment"
         },
-        "rollUp": ["id", "amountAwarded"]
+        "rollUp": ["id", "dateCommitted", "currency", "amountCommitted"]
     },
     "loan": {
       "description": "A loan within a blended finance deal",
       "title": "Loan",
       "type": "array",
       "items": {
-        "$ref": "#/definitions/Loan"
+        "$ref": "#/definitions/Investment"
       },
-     "rollUp": ["id", "amountAwarded"]
+     "rollUp": ["id", "dateCommitted", "currency", "amountCommitted"]
     },
     "shareIssue": {
       "description": "A share issue in a blended finance deal",
       "title": "Share Issue",
       "type": "array",
       "items": {
-        "$ref": "#/definitions/ShareIssue"
+        "$ref": "#/definitions/Investment"
       },
-      "rollUp": ["id", "matchFundingAmountAwarded"]
+      "rollUp": ["id", "dateCommitted", "currency", "amountCommitted"]
     },
     "project": {
       "description": "A project associated with a blended finance deal",
@@ -408,7 +517,7 @@
       "rollUp": ["id", "title"]
     },
     "fundingOrganization": {
-      "description": "Details of the funder",
+      "description": "Details of the funder of the blended finance deal. If different components of the deal have separate funders, these should be recorded within the individual investment entries.",
       "title": "Funding Org",
       "items": {
         "$ref": "#/definitions/Organization"
